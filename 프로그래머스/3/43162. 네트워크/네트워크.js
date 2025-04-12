@@ -1,28 +1,42 @@
 function solution(n, computers) {
-    const visited = Array(n).fill(false);
-    
-    const dfs = (node) => {
-        if (visited[node]) return 0;
-        visited[node]=true;
-
-        for (let next=0 ; next<n ; next++){
-            if (computers[node][next]){
-                dfs(next);
-                // visited[next]=true;
+    // computers 로부터 연결된 edges 추출
+    const edges = [];
+    for (let i = 0 ; i < computers.length ; i++) {
+        for (let j = i + 1 ; j < computers[0].length ; j++) {
+            if (computers[i][j] === 1) {
+                edges.push([i,j]);                
             }
         }
-        return 1;
+    }
+    // edges 기반으로 그룹 개수 세기
+    const N = computers.length;
+    const parent = Array.from({length: N}, (_, index) => index)
+    
+    function find(x) {
+        if (x !== parent[x]) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
     }
     
-    let cnt = 0;
-    
-    // [1 1 0] (0,0) (0,1)
-    // [1 1 1] (1,0) (1,1) (1,2)
-    // [0 1 1]       (2,1) (2,2)
-
-    for (let i=0 ; i<n ; i++){
-        cnt += dfs(i);
+    function union(x, y) {
+        const rootX = find(x);
+        const rootY = find(y);
+        if (rootX === rootY) {
+            return false;
+        }
+        parent[rootY] = rootX;
+        return true;
     }
     
-    return cnt;
+    for (const [x,y] of edges) {
+        union(x,y);        
+    }
+    
+    const group = new Set();
+    for (let i = 0 ; i < N ; i++) {
+        group.add(find(parent[i]));
+    }
+    
+    return group.size;
 }
