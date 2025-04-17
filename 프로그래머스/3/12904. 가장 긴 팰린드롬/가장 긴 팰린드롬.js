@@ -1,18 +1,24 @@
 function solution(s)
 {
-    function getPalindromeLength(left, right){
-        while (left >= 0 && right < s.length && s[left] === s[right]) {
-            left -= 1;
-            right += 1;
+    const n = s.length;
+    function getLength(left, right) {
+        while (left >= 0 && right < n) {
+            if (s[left] === s[right]) {
+                left -= 1;
+                right += 1;
+            }
+            else {
+                break;
+            }
         }
         return right - left - 1;
     }
     
-    let evenLen = 1;
-    let oddLen = 1;
-    for (let i = 0 ; i < s.length ; i++) {
-        evenLen = Math.max(evenLen, getPalindromeLength(i, i));
-        oddLen = Math.max(oddLen, getPalindromeLength(i, i + 1));
+    let maxLength = 0;
+    for (let i = 0 ; i < n ; i++) {
+        maxLength = Math.max(maxLength, getLength(i,i));
+        maxLength = Math.max(maxLength, getLength(i,i+1));
     }
-    return Math.max(evenLen, oddLen);
+    
+    return maxLength;
 }
