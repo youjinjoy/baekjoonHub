@@ -1,54 +1,60 @@
 import sys
-from collections import defaultdict,deque
+from collections import deque
+
 input = sys.stdin.readline
 
-[N,M,V] = map(int,input().split(' '))
+def solve():
+    N, M, V = list(map(int, input().split(' ')))
+    
+    graph = {i: [] for i in range(1, N+1)}
 
-class Graph:
-  def __init__(self):
-    self.graph = defaultdict(list)
-    self.visited = [False for _ in range(N+1)]    
+    for _ in range(M):
+        a, b =  list(map(int, input().split(' ')))
+        if a not in graph:
+            graph[a] = []
+        if b not in graph:
+            graph[b] = []
+        graph[a].append(b)
+        graph[b].append(a)
+    
+    for adj in graph:
+        graph[adj].sort()
 
-  def add_edge(self,u,v):
-    self.graph[u].append(v)
-    self.graph[v].append(u)
+        
+    visited = set()
+    dfs_path = []
+    def dfs(cur):
+        if cur in visited:
+            return
+        
+        visited.add(cur)
+        dfs_path.append(cur)
 
-  def print_graph(self):
-    for node in self.graph:
-      print('key',node,':',self.graph[node])
+        for next in graph[cur]:
+            dfs(next)
 
-  def dfs(self,start):
-    stack = [start]
-    while stack:
-      v = stack.pop()
-      if not self.visited[v]:
-        self.visited[v]=True
-        print(v, end=" ")
-        for u in sorted(self.graph[v],reverse=True):
-          if not self.visited[u]:
-            stack.append(u)
+    dfs(V)
 
-  def bfs(self,start):
-    q = deque([])
-    q.append(start)
-    while q:
-      v = q.popleft()
-      if not self.visited[v]:
-        print(v, end=" ")
-        self.visited[v]=True
-        for u in sorted(self.graph[v]):
-          if not self.visited[u]:
-            q.append(u)
+    
+    visited = set()
+    bfs_path = []
+    visited.add(V)
+    queue = deque([V])
+    def bfs():
 
-  def visited_intialize(self):
-    self.visited = [False for _ in range(N+1)] 
+        while (queue):
+            cur = queue.popleft()
+            bfs_path.append(cur)
+            
+    
+            for next in graph[cur]:
+                if not next in visited:
+                    visited.add(next)
+                    queue.append(next)
 
-al=Graph()
-for _ in range(M):
-  [u,v] = map(int,input().split(' '))
-  al.add_edge(u,v)
+    bfs()
 
-al.dfs(V)
-al.visited_intialize()
-print()
-al.bfs(V)
+    print(*dfs_path)
+    print(*bfs_path)
+
+solve()
