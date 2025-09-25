@@ -1,15 +1,27 @@
 import sys
-input=sys.stdin.readline
+from typing import List
 
-n,k=list(map(int,input().split()))
-coins=[int(input()) for _ in range(n)]
+def input():
+    return sys.stdin.readline().rstrip()
 
-dp=[0 for _ in range(k+1)]
-dp[0]=1
+def read_int():
+    return int(input())
 
-for coin in coins:
-  for i in range(k+1):
-    if i-coin>=0:
-      dp[i]+=dp[i-coin]
+def read_list() -> List[int]:
+    return list(map(int, input().split()))
 
-print(dp[k])
+
+def solve():
+    n, k = read_list()
+    coins = [read_int() for _ in range(n)]
+             
+    dp = [0 for _ in range(k + 1)]
+    dp[0] = 1
+
+    for value in coins:
+        for i in range(value, k + 1):
+            dp[i] = dp[i] + dp[i - value if i - value >= 0 else 0]
+
+    print(dp[k])
+    
+solve()
