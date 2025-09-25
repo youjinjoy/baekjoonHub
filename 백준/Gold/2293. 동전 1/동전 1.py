@@ -20,7 +20,7 @@ def solve():
 
     for value in coins:
         for i in range(value, k + 1):
-            dp[i] = dp[i] + dp[i - value if i - value >= 0 else 0]
+            dp[i] += dp[i - value]
 
     print(dp[k])
     
