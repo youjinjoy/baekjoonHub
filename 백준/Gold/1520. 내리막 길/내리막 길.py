@@ -10,47 +10,38 @@ def read_list() -> List[int]:
 
 
 def solve():
-    global N, M
     N, M = read_list()
 
-    global MAP, dp
     MAP = [read_list() for _ in range(N)]
     dp = [[-1 for _ in range(M)] for _ in range(N)]
 
-    global dx, dy
     dx = [-1, 0, 1, 0]
     dy = [0, 1, 0, -1]
+
         
-    for i in range(N):
-        for j in range(M):
-            dfs(i, j)
-    
+    def dfs(x, y):
+        
+        if x == N - 1 and y == M - 1:
+            return 1
 
-    return dp[0][0]
+        if dp[x][y] != -1:
+            return dp[x][y]
 
-
-def dfs(x, y):
-
-    if x == N - 1 and y == M - 1:
-        return 1
-
-    if dp[x][y] != -1:
+        dp[x][y] = 0
+        for i in range(4):
+            
+            nx, ny = x + dx[i], y + dy[i]
+            
+            if nx < 0 or nx >= N or ny < 0 or ny >= M:
+                continue
+            
+            if MAP[x][y] <= MAP[nx][ny]:
+                continue
+            
+            dp[x][y] += dfs(nx, ny)
+        
         return dp[x][y]
-
-    dp[x][y] = 0
-    for i in range(4):
         
-        nx, ny = x + dx[i], y + dy[i]
-        
-        if nx < 0 or nx >= N or ny < 0 or ny >= M:
-            continue
-        
-        if MAP[x][y] <= MAP[nx][ny]:
-            continue
-        
-        dp[x][y] += dfs(nx, ny)
-    
-    return dp[x][y]
-
+    return dfs(0, 0)
 
 print(solve())
