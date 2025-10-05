@@ -1,9 +1,12 @@
 import sys
 from typing import List
-import heapq as hq
+from collections import deque
 
 def input():
     return sys.stdin.readline().rstrip()
+
+def read_int():
+    return int(input())
 
 def read_list() -> List[int]:
     return list(map(int, input().split()))
@@ -17,32 +20,27 @@ def solve():
         a, b = read_list()
         adj[a].append(b)
 
+
     INF = float('inf')
     distance = [INF for _ in range(N + 1)]
 
     distance[X] = 0
-    heap = [(0, X)]
+    queue = deque([X])
 
-    while heap:
+    while queue:
+        u = queue.popleft()
 
-        d, node = hq.heappop(heap)
-        if d > distance[node]:
-            continue
-        
-        for next_node in adj[node]:
-            next_distance = d + 1
-            if next_distance < distance[next_node]:
-                distance[next_node] = next_distance
-                hq.heappush(heap, (next_distance, next_node))
-        
-    
-    flag = False
-    for index, d in enumerate(distance):
-        if d == K:
-            print(index)
-            flag = True
+        for w in adj[u]:
+            if distance[u] + 1 < distance[w]:
+                distance[w] = distance[u] + 1
+                queue.append(w)
 
-    if not flag:
+
+    result = [index for index, d in enumerate(distance) if d == K]
+
+    if result:
+        print('\n'.join(map(str, result)))
+    else:
         print(-1)
 
 solve()
