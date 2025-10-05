@@ -9,13 +9,14 @@ def read_int():
 def solve():
     while True:
         try:
-            ones = '1'
             digit = 1
             N = read_int()
-            while int(ones) % N != 0:
-                ones += '1'
+            remainder = 1 % N
+            while remainder != 0:
+                remainder = (remainder * 10 + 1) % N
                 digit += 1
             print(digit)
         except:
             return
+        
 solve()
