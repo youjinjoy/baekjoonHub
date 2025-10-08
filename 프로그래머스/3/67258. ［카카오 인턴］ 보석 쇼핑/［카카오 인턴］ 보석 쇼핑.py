@@ -6,7 +6,7 @@ def solution(gems):
     gems_set = set(gems)
     gems_counted = {}
     
-    while p2 < len(gems):
+    for p2 in range(len(gems)):
         gems_counted[gems[p2]] = gems_counted.get(gems[p2], 0) + 1
 
         # 모든 종류의 보석을 포함할 때까지 p2 이동
@@ -19,6 +19,8 @@ def solution(gems):
                         answer = [p1 + 1, p2 + 1]
                     break
                 gems_counted[gems[p1]] -= 1
+                if gems_counted[gems[p1]] == 0:
+                    del gems_set[gems[p1]]
                 p1 += 1
             
 
