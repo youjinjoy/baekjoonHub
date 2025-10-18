@@ -1,5 +1,5 @@
 import sys
-import bisect
+from collections import Counter
 input = sys.stdin.readline
 
 N = int(input())
@@ -7,10 +7,9 @@ A = list(map(int, input().split(' ')))
 M = int(input())
 X = list(map(int, input().split(' ')))
 
-A.sort()
-
 answer = []
+C = Counter(A)
 for x in X:
-    answer.append(bisect.bisect_right(A, x) - bisect.bisect_left(A,x))
+    answer.append(C[x])
 
 print(' '.join(map(str, answer)))
