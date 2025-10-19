@@ -7,11 +7,7 @@ A = list(map(int, input().split(' ')))
 
 SA = sorted(set(A))
 
-answer = []
-cache ={}
-for a in SA:
-    cache[a] = bisect_left(SA, a)
-for a in A:
-    answer.append(cache[a])
+cache = {a: i for i, a in enumerate(SA)}
+answer = [cache[a] for a in A]
 
-print('\n'.join(map(str, answer)))
+print(' '.join(map(str, answer)))
