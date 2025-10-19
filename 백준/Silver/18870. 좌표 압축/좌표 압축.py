@@ -7,5 +7,8 @@ A = list(map(int, input().split(' ')))
 
 SA = sorted(set(A))
 
+answer = []
 for a in A:
-    print(bisect_left(SA, a))
+    answer.append(bisect_left(SA, a))
+
+print('\n'.join(map(str, answer)))
