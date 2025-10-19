@@ -1,5 +1,4 @@
 import sys
-from collections import defaultdict
 input = sys.stdin.readline
 
 N = int(input())
@@ -16,11 +15,11 @@ def lower_bound(start, end, arr, target):
             end = mid - 1
     return start
 
-cache = defaultdict(lambda: None)
+cache = {}
+start = 0
+end = len(SA) - 1
+for a in SA:
+    cache[a] = lower_bound(start, end, SA, a)
+
 for a in A:
-    if cache[a] is not None:
-        print(cache[a])
-    else:
-        result = lower_bound(0, len(SA) - 1, SA, a)
-        cache[a] = result
-        print(result)
+    print(cache[a])
