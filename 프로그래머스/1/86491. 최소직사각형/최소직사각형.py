@@ -1,16 +1,11 @@
 def solution(sizes):
-    answer = 0
     
-    # sizes 순회하면서 큰 수를 왼쪽에, 작은 수를 오른쪽에
-    for size in sizes:
-        if size[0] < size[1]:
-            size[0], size[1] = size[1], size[0]
-    
-    # 큰 수 중에 가장 큰 수, 작은 수 중에 가장 큰 수끼리 곱하기
-    sizes.sort(key = lambda x: x[0])
-    b_biggest = sizes[-1][0]
-
-    sizes.sort(key = lambda x: x[1])
-    s_biggest = sizes[-1][1]
-    
-    return b_biggest * s_biggest
+    max_w, max_h = 0, 0
+    for a, b in sizes:
+        # 가로 길이가 항상 세로 길이보다 크도록
+        w, h = max(a, b), min(a, b)
+        # 순회하면서 가로, 세로 최대값 구하기
+        max_w = max(max_w, w)
+        max_h = max(max_h, h)
+        
+    return max_w * max_h
