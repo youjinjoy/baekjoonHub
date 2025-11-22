@@ -1,22 +1,29 @@
 import sys
+
 input = sys.stdin.readline
 
-N,M = map(int,input().split(' '))
-arr = list(map(int,input().split(' ')))
-used = [False]*N
+N, M = map(int, input().split(' '))
 
-def dfs(depth,start,current):
-  if depth == M:
-    print(' '.join(map(str,current)))
-    return
-
-  last = -1
-  for i in range(start,N):
-    if not used[i] and arr[i] != last:
-      used[i] = True
-      dfs(depth+1,i,current+[arr[i]])
-      used[i] = False
-      last = arr[i]
-      
+arr = list(map(int, input().split(' ')))
 arr.sort()
-dfs(0,0,[])
+
+visited = [False for _ in range(N)]
+
+result = []
+
+def dfs(k):
+    if len(result) == M:
+        print(*result)
+        return
+    
+    prev = 0
+    for i in range(k,N):
+        if not visited[i] and prev != arr[i]:
+            result.append(arr[i])
+            visited[i] = True
+            prev = arr[i]
+            dfs(i+1)
+            result.pop()
+            visited[i] = False
+
+dfs(0)
