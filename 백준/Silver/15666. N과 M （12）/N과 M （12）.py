@@ -1,20 +1,22 @@
 import sys
+
 input = sys.stdin.readline
 
-N,M = map(int,input().split(' '))
-arr = list(map(int,input().split(' ')))
-used = [False]*N
+N, M = map(int, input().split(' '))
 
-def dfs(depth,start,current):
-  if depth == M:
-    print(' '.join(map(str,current)))
-    return
+s = set(map(int, input().split(' ')))
+a = sorted(list(set(s)))
 
-  last = -1
-  for i in range(start,N):
-    if arr[i] != last:
-      dfs(depth+1,i,current+[arr[i]])
-      last = arr[i]
-      
-arr.sort()
-dfs(0,0,[])
+result = []
+
+def dfs(k):
+    if len(result) == M:
+        print(*result)
+        return
+    
+    for i in range(k, len(a)):
+        result.append(a[i])
+        dfs(i)
+        result.pop()
+
+dfs(0)
