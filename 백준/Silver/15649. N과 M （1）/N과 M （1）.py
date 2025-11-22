@@ -1,23 +1,24 @@
 import sys
-from collections import deque
+
 input = sys.stdin.readline
 
-N,M = map(int,input().split(' '))
+N, M = map(int, input().split(' '))
+visited = [False for _ in range(N + 1)]
+result = []
 
-used = [False] * (N+1)
-current = []
+def dfs():
+    if len(result) == M:
+        print(*result)
+        return
 
-def dfs(depth):
-  if depth == M:
-    print(' '.join(map(str,current)))
-    return
+    for i in range(1, N + 1):
+        if not visited[i]:
+            visited[i] = True
+            result.append(i)
 
-  for i in range(1,N+1):
-    if not used[i]:
-      current.append(i)
-      used[i]=True
-      dfs(depth+1)
-      current.pop()
-      used[i]=False
+            dfs()
 
-dfs(0)      
+            visited[i] = False
+            result.pop()
+
+dfs()
