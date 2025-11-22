@@ -1,5 +1,4 @@
 import math
-from itertools import permutations
 
 def solution(numbers):
     answer = 0
@@ -8,9 +7,7 @@ def solution(numbers):
     p_list = set()
     # numbers로 만들 수 있는 조합
     ## itertools? dfs?
-    for r in range(1, len(n_list) + 1):
-        for p in permutations(n_list, r):
-            p_list.add(int(''.join(map(str, p))))
+    p_list = get_candidates_from(numbers)
             
     # 해당 조합의 숫자가 소수인지 판별
     # true로 판별된 개수 더하기
@@ -19,6 +16,39 @@ def solution(numbers):
             answer += 1
 
     return answer
+
+# 0 1 1
+# 0 1 1
+# 0 1 1
+
+def get_candidates_from(numbers):
+
+    candidates = set()
+    
+    def dfs(depth):
+        if len(result) == depth:
+            c = int(''.join(map(str,result)))
+            candidates.add(c)
+            return
+        
+        prev = -1
+        for i in range(N):
+            if not visited[i] and prev != numbers[i]:
+                visited[i] = True
+                result.append(numbers[i])
+                prev = numbers[i]
+                dfs(depth)
+                visited[i] = False
+                result.pop()
+
+    N = len(numbers)
+    
+    for M in range(1, N + 1):
+        visited = [False for _ in range(N)]
+        result = []
+        dfs(M)
+    
+    return list(candidates)
 
 def is_prime(number):
     
