@@ -1,15 +1,18 @@
 import sys
-from collections import deque
+
 input = sys.stdin.readline
 
-N,M = map(int,input().split(' '))
+N, M = map(int, input().split(' '))
+result = []
 
-def dfs(depth,current,start):
-  if depth == M:
-    print(' '.join(map(str,current)))
-    return
+def dfs(k):
+    if len(result) == M:
+        print(*result)
+        return
 
-  for i in range(start,N+1):
-    dfs(depth+1,current+[i],i)
+    for i in range(k, N + 1):
+        result.append(i)
+        dfs(i)
+        result.pop()
 
-dfs(0,[],1)
+dfs(1)
