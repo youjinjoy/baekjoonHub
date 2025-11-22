@@ -1,18 +1,26 @@
 import sys
-from collections import deque
+
 input = sys.stdin.readline
 
-N,M = map(int,input().split(' '))
-arr = list(map(int,input().split(' ')))
+N, M = map(int, input().split(' '))
 
-def dfs(depth,current):
-  if depth == M:
-    print(' '.join(map(str,current)))
-    return
-
-  for i in range(0,N):
-    if arr[i] not in current:
-      dfs(depth+1,current+[arr[i]])
-
+arr = list(map(int, input().split(' ')))
 arr.sort()
-dfs(0,[])
+visited = [False for _ in range(N)]
+
+result = []
+
+def dfs():
+    if len(result) == M:
+        print(*result)
+        return
+
+    for i in range(0, N):
+        if not visited[i]:
+            visited[i] = True
+            result.append(arr[i])
+            dfs()
+            visited[i] = False
+            result.pop()
+
+dfs()
