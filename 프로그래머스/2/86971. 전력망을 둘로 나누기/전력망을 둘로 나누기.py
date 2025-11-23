@@ -2,15 +2,11 @@ from collections import deque
 
 def solution(n, wires):
     
+    min_sub = 100
+    
     # 전선 하나 끊기
-    # 해당 전선 상태에서 각 네트워크 개수 세기
-    # -> 네트워크 개수 비교해 최솟값 저장
-    
-    min_count = 100
-    
     for i in range(n - 1):
         new_wires = wires[:i] + wires[i+1:]
-        
         
         graph = [[] for _ in range(n + 1)]
         
@@ -18,21 +14,21 @@ def solution(n, wires):
             graph[a].append(b)
             graph[b].append(a)
             
-        min_count = min(min_count, count_nodes(n, graph))
-        
-    return min_count
+        # 해당 전선 상태에서 각 네트워크 개수 세기
+        count = get_count(n, graph)
 
-def count_nodes(n, graph):
+        # 네트워크 개수 비교해 최솟값 저장
+        min_sub = min(min_sub, abs((n - count) - count))
+        
+    return min_sub
+
+def get_count(n, graph):
     
     visited = [False for _ in range(n + 1)]
     
-    result = []
-    
-    for i in range(1, n + 1):
-        count = bfs(n, i, graph, visited)
-        if count > 0:
-            result.append(count)
-    return result[1] - result[0] if result[1] >= result[0] else result[0] - result[1]
+    count = bfs(n, 1, graph, visited)
+    if count > 0:
+        return count
     
 def bfs(n, start, graph, visited):
     
