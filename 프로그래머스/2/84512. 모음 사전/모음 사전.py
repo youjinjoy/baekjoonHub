@@ -1,18 +1,24 @@
 def solution(word):
-    cnt = [0]
+    answer = 0
     
-    def dfs(current):
-        
-        if current == word:
-            return True
-        
-        if len(current) == 5:
-            return False
-        
-        for c in "AEIOU":
-            cnt[0] += 1
-            if dfs(current+c):
-                return True
-    dfs("")
+    D = {}
+    backtrack([], D, 0)
     
-    return cnt[0]
+    return D[word]
+
+def backtrack(result, D, cnt):
+    word = ''.join(result)
+    D[word] = cnt
+
+    cnt += 1
+    
+    if len(result) == 5:
+        return cnt
+    
+    for letter in ['A', 'E', 'I', 'O', 'U']:
+        result.append(letter)
+        cnt = backtrack(result, D, cnt)
+        result.pop()
+    
+    return cnt
+    
