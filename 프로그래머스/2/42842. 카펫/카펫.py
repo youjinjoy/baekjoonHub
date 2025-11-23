@@ -1,10 +1,9 @@
-def solution(brown, yellow):
-    answer = []
-    
-    for i in range(1, yellow + 1):
-        if yellow % i == 0:
-            if ((yellow // i) + i) * 2 + 4 == brown:
-                answer = [yellow // i + 2, i + 2]
-                break
 
-    return answer
+def solution(brown, yellow):
+    
+    for h in range(1, yellow + 1):
+        if yellow % h == 0:
+            w = yellow // h
+            
+            if (w + h) * 2 + 4 == brown:
+                return [w + 2, h + 2]
