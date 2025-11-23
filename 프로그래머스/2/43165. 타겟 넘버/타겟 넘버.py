@@ -1,31 +1,11 @@
 def solution(numbers, target):
     
-    return backtrack([], numbers, target)
+    return dfs(0, 0, numbers, target)
 
 
-def backtrack(result, numbers, target):
-    answer = 0
-    
-    if len(result) == len(numbers):
-        if calculate_with_op(numbers, result, target) == target:
-            return 1
-        return 0
-    
-    for op in ['+', '-']:
-        result.append(op)
-        answer += backtrack(result, numbers, target)
-        result.pop()
+def dfs(i, total, numbers, target):
 
-    return answer
-        
-def calculate_with_op(numbers, ops, target):
+    if i == len(numbers):
+        return 1 if total == target else 0
     
-    result = 0
-
-    for i in range(len(numbers)):
-        if ops[i] == '+' :
-            result += numbers[i]
-        else :  # op == '-'
-            result -= numbers[i]
-    
-    return result
+    return dfs(i + 1, total + numbers[i], numbers, target) + dfs(i + 1, total - numbers[i], numbers, target) 
