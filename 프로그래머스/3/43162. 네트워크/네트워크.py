@@ -6,7 +6,8 @@ def solution(n, computers):
 
     for start in range(n):
         if not visited[start]:
-            answer += dfs(start, computers, visited)
+            dfs(start, computers, visited)
+            answer += 1
         
     return answer
 
@@ -18,5 +19,3 @@ def dfs(cur, computers, visited):
         
         if cur != nxt and computers[cur][nxt] and not visited[nxt]:
             dfs(nxt, computers, visited)
-    
-    return 1
