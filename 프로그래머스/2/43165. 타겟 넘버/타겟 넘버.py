@@ -1,22 +1,23 @@
 def solution(numbers, target):
-    answer = [0]
     
-    backtrack([], numbers, target, answer)
-    
-    return answer[0]
+    return backtrack([], numbers, target)
 
-def backtrack(result, numbers, target, answer):
+
+def backtrack(result, numbers, target):
+    answer = 0
     
     if len(result) == len(numbers):
         if calculate_with_op(numbers, result, target) == target:
-            answer[0] += 1
+            return 1
         return 0
     
     for op in ['+', '-']:
         result.append(op)
-        backtrack(result, numbers, target, answer)
+        answer += backtrack(result, numbers, target)
         result.pop()
 
+    return answer
+        
 def calculate_with_op(numbers, ops, target):
     
     result = 0
