@@ -10,10 +10,9 @@ def solution(maps):
     n = len(maps)
     m = len(maps[0])
     
-    visited = [[False for _ in range(m)] for _ in range(n)]
 
     queue = deque([(0, 0, 1)])
-    visited[0][0] = True
+    maps[0][0] = 0
     
     while queue:
         x, y, c = queue.popleft()
@@ -24,13 +23,10 @@ def solution(maps):
         for i in range(4):        
             nx, ny = x + dx[i], y + dy[i]
             
-            if nx < 0 or nx >= n or ny < 0 or ny >= m or visited[nx][ny]:
-                continue
-                
-            if maps[nx][ny] == 0:
+            if nx < 0 or nx >= n or ny < 0 or ny >= m or maps[nx][ny] == 0:
                 continue
             
-            visited[nx][ny] = True
+            maps[nx][ny] = 0
             queue.append((nx, ny, c + 1))
     
     return -1
