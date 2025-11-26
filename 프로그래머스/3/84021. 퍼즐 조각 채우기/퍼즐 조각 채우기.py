@@ -3,14 +3,10 @@ from collections import deque, defaultdict
 def solution(game_board, table):
     
     # game_board 내 도형 추출
-    space_dict = defaultdict(list)
-    space_arr = calc_shape_map(game_board, 0, space_dict)
-    # space_arr.sort(key = lambda x: len(x))
+    space_arr = calc_shape_map(game_board, 0)
     
     # table 내 도형 추출
-    figure_dict = defaultdict(list)
-    figure_arr = calc_shape_map(table, 1, figure_dict)
-    # figure_arr.sort(key = lambda x: len(x))
+    figure_arr = calc_shape_map(table, 1)
 
     result = []
     visited_space = [False for _ in range(len(space_arr))]
@@ -67,7 +63,7 @@ def rotate_cw(figure):
     
     return new_figure
 
-def calc_shape_map(maps, target, D):
+def calc_shape_map(maps, target):
     w, h = len(maps[0]), len(maps)
     visited = [[False for _ in range(w)] for _ in range(h)]
     shape_map = []
@@ -78,7 +74,6 @@ def calc_shape_map(maps, target, D):
                 if len(coords):
                     shape = coords_to_maps(coords)
                     shape_map.append(shape)
-                    D[len(coords)].append(shape)
     
     return shape_map
 
