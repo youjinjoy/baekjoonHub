@@ -1,14 +1,13 @@
 def solution(phone_book):
     answer = True
-    dic={}
-    for number in phone_book:
-        dic[number]=1
+    
+    prefix = {n: True for n in phone_book}
     
     for number in phone_book:
-        s=""
-        for n in number:
-            s+=n
-            if s in dic and s!=number:
-                answer=False
-
+        p = ''
+        for i in range(len(number)):
+            p += number[i]
+            if prefix.get(p) and p != number:
+                return False
+    
     return answer
