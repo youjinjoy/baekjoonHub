@@ -1,13 +1,9 @@
 def solution(phone_book):
-    answer = True
     
-    prefix = {n: True for n in phone_book}
+    phone_book.sort()
     
-    for number in phone_book:
-        p = ''
-        for i in range(len(number)):
-            p += number[i]
-            if prefix.get(p) and p != number:
-                return False
+    for i in range(len(phone_book) - 1):
+        if phone_book[i+1].startswith(phone_book[i]):
+            return False
     
-    return answer
+    return True
