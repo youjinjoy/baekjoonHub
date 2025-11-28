@@ -6,19 +6,18 @@ def solution(priorities, location):
     # 배열 순회하다가 찾으면 그 값 0으로 변경 및 runned += 1
     # location에 위치한 값이 0이 되면 return
     
-    biggest = max(priorities)
+    biggest = sorted(priorities, reverse = True)
     i = 0
     
     while True:
 
-        if priorities[i] == biggest:
+        if priorities[i] == biggest[runned]:
             runned += 1
 
             if i == location:
                 return runned
             
             priorities[i] = 0
-            biggest = max(priorities)
             
         # if runned == len(priorities):
         #     break
