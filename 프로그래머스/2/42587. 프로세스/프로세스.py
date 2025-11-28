@@ -1,21 +1,29 @@
-from collections import deque
-
 def solution(priorities, location):
-    h=[]
-    q=deque()
     answer = 0
+    
+    runned = 0
+    # max로 최댓값 찾기
+    # 배열 순회하다가 찾으면 그 값 0으로 변경 및 runned += 1
+    # location에 위치한 값이 0이 되면 return
+    
+    biggest = max(priorities)
+    i = 0
+    
+    while True:
 
-    for i in range(len(priorities)):
-        q.append((priorities[i],i))
+        if priorities[i] == biggest:
+            runned += 1
+
+            if i == location:
+                return runned
+            
+            priorities[i] = 0
+            biggest = max(priorities)
+            
+        # if runned == len(priorities):
+        #     break
+
+        i = (i+1) % len(priorities)
         
-    priorities.sort()
-
-    while len(priorities)!=0:
-        answer+=1
-        m=priorities.pop()
-        while q[0][0]<m:
-            q.append(q.popleft())
-        if q.popleft()[1]==location:
-            break
-
-    return answer
+    
+    # return runned
