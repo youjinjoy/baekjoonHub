@@ -1,30 +1,24 @@
-from collections import deque
+import math
 
 def solution(progresses, speeds):
     
+    days = []
+    
+    for i, progress in enumerate(progresses):
+        days.append(math.ceil((100 - progress) / speeds[i]))
+    
     answer = []
-    
-    q = deque([(progress, i) for i, progress in enumerate(progresses)])
-    
-    while q:
-        
-        current_progress = []
-
-        for j in range(len(q)):
-            p, i = q.popleft()
-            p += speeds[i]
-            q.append((p, i))
-            current_progress.append(p)
-
-        cnt = 0
-        for p in current_progress:
-            if p < 100:
-                break
+    prev = days[0]
+    cnt = 0
+    for day in days:
+        if day <= prev:
             cnt += 1
-        
-        if cnt > 0:
+        else:
             answer.append(cnt)
-            for _ in range(cnt):
-                q.popleft()
-        
+            prev = day
+            cnt = 1
+    
+    if cnt != 0:
+        answer.append(cnt)
+
     return answer
