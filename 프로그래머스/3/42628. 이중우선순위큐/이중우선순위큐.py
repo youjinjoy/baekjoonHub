@@ -1,53 +1,62 @@
 import heapq as hq
+from collections import defaultdict
 
 def solution(operations):
-    # 최소 힙, 최대 힙, deque 만들기
-    minh = []
-    maxh = []
-    stack = []
-    # Insert 시 0 기준으로 최소, 최대 힙에 넣기
-    # Delete 시 각 힙에 맞게 빼기
-    ### 한쪽 힙에 없는데 다른쪽 힙은 있으면 전부 deque에 넣고 구하기
-    for operation in operations:
-        [o,n]=operation.split(' ')
-        n=int(n)
+    
+    min_q = []
+    max_q = []
+    deleted = defaultdict(bool)
+    idx = 0
+    
+    for op in operations:
+        c, n = op.split(' ')
+        n = int(n)
         
-        if o == 'I':
-            if n >= 0:
-                hq.heappush(maxh,-n)
-            else: # n < 0
-                hq.heappush(minh,n)
-        elif o == 'D':
-            if n == 1 and maxh:
-                hq.heappop(maxh)
-            elif n == 1 and minh: # maxh는 비어있는 경우
-                while minh:
-                    stack.append(hq.heappop(minh))
-                stack.pop()
-                while stack:
-                    hq.heappush(minh, stack.pop())
-            elif n == -1 and minh:
-                hq.heappop(minh)
-            elif n == -1 and maxh: # minh는 비어있는 경우
-                while maxh:
-                    stack.append(hq.heappop(maxh))
-                stack.pop()
-                while stack:
-                    hq.heappush(maxh, stack.pop())
-    max_v=0
-    min_v=0
+        if c == 'I':
+            hq.heappush(max_q, (-n, idx))
+            hq.heappush(min_q, (n, idx))
+            idx += 1
+            
+        elif c == 'D' and n == 1 and max_q:
+            
+            top = max_q[0]
+            c_n, c_idx = top
+            
+            while max_q and deleted[c_idx]:
+                deleted[c_idx] = False
+                _, c_idx = hq.heappop(max_q)
+            
+            if max_q:
+                d = hq.heappop(max_q)
+                deleted[d[1]] = True
+            
+        elif c == 'D' and n == -1 and min_q:
+            
+            top = min_q[0]
+            c_n, c_idx = top
+            
+            while min_q and deleted[c_idx]:
+                deleted[c_idx] = False
+                _, c_idx = hq.heappop(min_q)
+            
+            if min_q:
+                d = hq.heappop(min_q)
+                deleted[d[1]] = True
+
+    max_top = 0
+    min_top = 0
+    while max_q:
+        if deleted[max_q[0][1]]:
+            hq.heappop(max_q)
+        else:
+            max_top = -max_q[0][0]
+            break
     
-    if minh and maxh:
-        min_v = hq.heappop(minh)
-        max_v = -hq.heappop(maxh)
-    elif minh:
-        min_v = minh[0]
-        while minh:
-            max_v = hq.heappop(minh)
-    elif maxh:
-        max_v = -maxh[0]
-        while maxh:
-            min_v = -hq.heappop(maxh)
+    while min_q:
+        if deleted[min_q[0][1]]:
+            hq.heappop(min_q)
+        else:
+            min_top = min_q[0][0]
+            break
     
-    answer = [max_v, min_v]
-    return answer
+    return [max_top, min_top]
