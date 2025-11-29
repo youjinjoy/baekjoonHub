@@ -1,16 +1,19 @@
 def solution(prices):
-    stack = []
-    time = [0 for _ in prices]
-    n = len(time)
+    answer = [0 for _ in range(len(prices))]
     
+    stack = []
     for i, price in enumerate(prices):
-        while stack and prices[stack[-1]] > price:
-            j = stack.pop()
-            time[j] = i-j
-        stack.append(i)
         
+        while stack and stack[-1][0] > price:
+            cp, ci = stack.pop()
+            answer[ci] = i - ci
+        
+        stack.append((price, i))
+        
+    
     while stack:
-        t = stack.pop()
-        time[t] = n-t-1
-            
-    return time
+        cp, ci = stack.pop()
+        answer[ci] = len(prices) - 1 - ci
+
+    
+    return answer
