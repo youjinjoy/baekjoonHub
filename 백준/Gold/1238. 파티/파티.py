@@ -1,54 +1,41 @@
 import sys
-from typing import List
 import heapq as hq
 
+input = sys.stdin.readline
 
-def input():
-    return sys.stdin.readline().rstrip()
+N, M, X = list(map(int, input().split(' ')))
 
-def read_int():
-    return int(input())
+graph = [[] for _ in range(N + 1)]
 
-def read_list() -> List[int]:
-    return list(map(int, input().split()))
+for _ in range(M):
+    start, dest, cost = list(map(int, input().split(' ')))
+    graph[start].append((cost, dest))
 
 
-def solve():
-    N, M, X = read_list()
+def dijkstra(start):
+    distance = [float('inf') for _ in range(N + 1)]
 
-    adj = [[] for _ in range(N + 1)]    
-    for _ in range(M):
-        a, b, time = read_list()
-        adj[a].append((time, b))
-    
-    INF = float('inf')
+    distance[start] = 0
+    pq = [(0, start)]
 
-    def dijkstra(start):
-        times = [INF for _ in range(N + 1)]
-        heap = [(0, start)]
-        times[start] = 0
+    while pq:
+        dist, cur = hq.heappop(pq)
 
-        while heap:
-            ct, u = hq.heappop(heap)
+        if distance[cur] < dist:
+            continue
 
-            if times[u] < ct:
-                continue
+        for cost, nxt in graph[cur]:
+            new_dist = dist + cost
+            if new_dist < distance[nxt]:
+                distance[nxt] = new_dist
+                hq.heappush(pq, (new_dist, nxt))
 
-            for nt, v in adj[u]:
-                time = ct + nt
-                if ct + nt < times[v]:
-                    hq.heappush(heap, (time, v))
-                    times[v] = time
+    return distance
 
-        return times
-    
-    going_times = [dijkstra(i)[X] for i in range(N+1)]
-    coming_times = dijkstra(X)
+result = dijkstra(X)
 
-    answer = 0
-    for j in range(1, N+1):
-        answer = max(answer, going_times[j] + coming_times[j])
+for i in range(1, N + 1):
 
-    print(answer)
+    result[i] += dijkstra(i)[X]
 
-solve()
+print(max(result[1:]))
