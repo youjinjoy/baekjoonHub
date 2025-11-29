@@ -1,34 +1,33 @@
 import sys
 import heapq as hq
+
 input = sys.stdin.readline
 
-V,E = map(int,input().split(' '))
-K = int(input())
+V, E = list(map(int,input().split(' ')))
+start = int(input())
 
-graph = [[] for _ in range(V+1)] # 0번째는 사용 X
+graph = [[] for _ in range(V + 1)]
 
 for _ in range(E):
-  u,v,w = map(int,input().split(' '))
-  graph[u].append((w,v))
+    u, v, dist = list(map(int,input().split(' ')))
+    graph[u].append((dist, v))
 
-distances = [float('inf')]*(V+1)
-distances[K] = 0
-pq = [(0,K)]
+distance = [float('inf') for _ in range(V + 1)]
+distance[start] = 0
+
+pq = [(0, start)]
 while pq:
-  distance, vertex = hq.heappop(pq)
+    dist, now = hq.heappop(pq)
 
-  if distance > distances[vertex]:
-    continue
+    if distance[now] < dist:
+        continue
 
-  for weight, neighbor in graph[vertex]:
-    new_distance = distance + weight
+    for cost, nxt in graph[now]:
+        new_cost = dist + cost
 
-    if new_distance < distances[neighbor]:
-      distances[neighbor] = new_distance
-      hq.heappush(pq, (new_distance, neighbor))
+        if new_cost < distance[nxt]:
+            distance[nxt] = new_cost
+            hq.heappush(pq, (new_cost, nxt))
 
-for i in range(1,V+1):
-  if distances[i] == float('inf'):
-    print("INF")
-  else:
-    print(distances[i])
+for c in distance[1:]:
+    print('INF' if c == float('inf') else c)
