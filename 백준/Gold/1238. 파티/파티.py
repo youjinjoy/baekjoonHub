@@ -6,17 +6,18 @@ input = sys.stdin.readline
 N, M, X = list(map(int, input().split(' ')))
 
 graph = [[] for _ in range(N + 1)]
+reverse_graph = [[] for _ in range(N + 1)]
 
 for _ in range(M):
     start, dest, cost = list(map(int, input().split(' ')))
     graph[start].append((cost, dest))
+    reverse_graph[dest].append((cost, start))
 
-
-def dijkstra(start):
+def dijkstra(graph):
     distance = [float('inf') for _ in range(N + 1)]
 
-    distance[start] = 0
-    pq = [(0, start)]
+    distance[X] = 0
+    pq = [(0, X)]
 
     while pq:
         dist, cur = hq.heappop(pq)
@@ -32,10 +33,11 @@ def dijkstra(start):
 
     return distance
 
-result = dijkstra(X)
+to_X = dijkstra(graph)
+from_X = dijkstra(reverse_graph)
 
+ans = 0
 for i in range(1, N + 1):
+    ans = max(ans, to_X[i] + from_X[i])
 
-    result[i] += dijkstra(i)[X]
-
-print(max(result[1:]))
+print(ans)
