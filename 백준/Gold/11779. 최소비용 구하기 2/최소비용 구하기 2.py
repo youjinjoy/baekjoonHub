@@ -1,60 +1,50 @@
 import sys
-from typing import List
 import heapq as hq
 
+input = sys.stdin.readline
 
-def input():
-    return sys.stdin.readline().rstrip()
+n = int(input())
+m = int(input())
 
-def read_int():
-    return int(input())
+graph = [[] for _ in range(n + 1)]
 
-def read_list() -> List[int]:
-    return list(map(int, input().split()))
+for _ in range(m):
+    start, dest, cost = list(map(int, input().split(' ')))
+    graph[start].append((cost, dest))
 
+start, dest = list(map(int, input().split(' ')))
 
-def solve():
-    n = read_int()
-    m = read_int()
+distance = [float('inf') for _ in range(n + 1)]
+distance[start] = 0
 
-    adj = [[] for _ in range(n + 1)]
-    for _ in range(m):
-        a, b, cost = read_list()
-        adj[a].append((cost, b))
+prev = [-1] * (n + 1)
 
-    INF = float('inf')
-    distance = [INF for _ in range(n + 1)]
-    prev = [-1 for _ in range(n + 1)]
+pq = [(0, start)]
 
-    start, end = read_list()
-    heap = [(0, start)]
-    distance[start] = 0
+while pq:
+    dist, now = hq.heappop(pq)
 
-    while heap:
-        c, u = hq.heappop(heap)
+    if distance[now] < dist:
+        continue
 
-        if c > distance[u]:
-            continue
-
-        for w, v in adj[u]:
-            nc = c + w
-            if nc < distance[v]:
-                hq.heappush(heap, (nc, v))
-                distance[v] = nc
-                prev[v] = u
+    for cost, nxt in graph[now]:
+        new_dist = dist + cost
+        if new_dist < distance[nxt]:
+            prev[nxt] = now
+            distance[nxt] = new_dist
+            hq.heappush(pq, (new_dist, nxt))
     
-    print(distance[end])
-    
-    node = end
-    result = [end]
-    count = 1
-    while node != start:
-        node = prev[node]
-        result.append(node)
-        count += 1
-    print(count)
 
-    result.reverse()
-    print(*result)
-    
-solve()
+print(distance[dest])
+
+path = []
+cur = dest
+
+while cur != -1:
+    path.append(cur)
+    cur = prev[cur]
+
+path.reverse()
+
+print(len(path))
+print(*path)
