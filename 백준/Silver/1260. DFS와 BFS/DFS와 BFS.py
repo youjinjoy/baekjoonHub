@@ -1,60 +1,47 @@
 import sys
 from collections import deque
-
 input = sys.stdin.readline
 
-def solve():
-    N, M, V = list(map(int, input().split(' ')))
-    
-    graph = {i: [] for i in range(1, N+1)}
+N, M, V = list(map(int, input().split(' ')))
 
-    for _ in range(M):
-        a, b =  list(map(int, input().split(' ')))
-        if a not in graph:
-            graph[a] = []
-        if b not in graph:
-            graph[b] = []
-        graph[a].append(b)
-        graph[b].append(a)
-    
-    for adj in graph:
-        graph[adj].sort()
+graph = [[] for _ in range(N + 1)]
 
-        
-    visited = set()
-    dfs_path = []
-    def dfs(cur):
-        if cur in visited:
-            return
-        
-        visited.add(cur)
-        dfs_path.append(cur)
+for _ in range(M):
+    a, b = list(map(int, input().split(' ')))
+    graph[a].append(b)
+    graph[b].append(a)
 
-        for next in graph[cur]:
-            dfs(next)
+for nodes in graph:
+    nodes.sort()
 
-    dfs(V)
+def dfs(cur, visited, result):
+    visited[cur] = True
+    result.append(cur)
 
-    
-    visited = set()
-    bfs_path = []
-    visited.add(V)
-    queue = deque([V])
-    def bfs():
+    for nxt in graph[cur]:
+        if not visited[nxt]:
+            dfs(nxt, visited, result)
 
-        while (queue):
-            cur = queue.popleft()
-            bfs_path.append(cur)
-            
-    
-            for next in graph[cur]:
-                if not next in visited:
-                    visited.add(next)
-                    queue.append(next)
+def bfs(start, visited, result):
+    q = deque([start])
+    visited[start] = True
 
-    bfs()
+    while q:
+        cur = q.popleft()
+        result.append(cur)
 
-    print(*dfs_path)
-    print(*bfs_path)
+        for nxt in graph[cur]:
+            if not visited[nxt]:
+                visited[nxt] = True
+                q.append(nxt)
 
-solve()
+visited = [False for _ in range(N + 1)]
+result = []
+dfs(V, visited, result)
+print(*result)
+
+visited = [False for _ in range(N + 1)]
+result = []
+bfs(V, visited, result)
+print(*result)
+
