@@ -1,59 +1,44 @@
 import sys
 from collections import deque
-# import heapq
-# sys.setrecursionlimit(10**9)
-# sys.stdin=open("test.txt")
-input=sys.stdin.readline
+input = sys.stdin.readline
 
-n=int(input())
-graph=[]
-visited=[[False for _ in range(n)] for _ in range(n)]
-for i in range(n):
-    line=list(map(int,input().strip()))
-    graph.append(line)
-# print(graph)
-# print(visited)
+N = int(input())
 
-dx=[1,0,-1,0]
-dy=[0,1,0,-1]
+maps = [list(map(int, input().strip())) for _ in range(N)]
 
-def bfs(a,b):
-    queue=deque()
-    queue.append((a,b))
-    visited[a][b]=True
-    house=1
-    while queue:
-        x,y=queue.popleft()
-        # print(house,x,y)
+visited = [[False] * N for _ in range(N)]
+
+def bfs(x, y):
+    q = deque([(x, y)])
+    maps[x][y] = 2
+    cnt = 0
+
+    d = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+
+    while q:
+        cx, cy = q.popleft()
+        cnt += 1
+
         for i in range(4):
-            nx=x+dx[i]
-            ny=y+dy[i]
-            if 0<=nx<n and 0<=ny<n and graph[nx][ny]==1 and not visited[nx][ny]:
-                # print(nx,ny)
-                visited[nx][ny]=True
-                house+=1
-                queue.append((nx,ny))
-    # print('-')
-    # if house==0:
-    #     house=1
-    return house
+            nx, ny = cx + d[i][0], cy + d[i][1]
 
+            if nx < 0 or nx >= N or ny < 0 or ny >= N or maps[nx][ny] != 1:
+                continue
 
-danji=0
-ans=[]
-for i in range(n):
-    for j in range(n):
-        if not visited[i][j] and graph[i][j]==1:
-            house=bfs(i,j)
-            if house>0:
-                danji+=1
-                ans.append(house)
-ans.sort()
-print(danji)
-# if not ans:
-#     print(0)
-# else:
-#     for a in ans:
-#         print(a)
-for a in ans:
-    print(a)
+            visited[nx][ny] = True
+            maps[nx][ny] = 2
+            q.append((nx, ny))
+    
+    return cnt
+
+result = []
+for i in range(N):
+    for j in range(N):
+        if not visited[i][j] and maps[i][j] == 1:
+            result.append(bfs(i, j))
+
+print(len(result))
+
+result.sort()
+for cnt in result:
+    print(cnt)
