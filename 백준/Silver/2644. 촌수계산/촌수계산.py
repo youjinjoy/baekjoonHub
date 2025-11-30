@@ -1,48 +1,47 @@
 import sys
-from typing import List
+from collections import deque
+input = sys.stdin.readline
 
-def input():
-    return sys.stdin.readline().rstrip()
+N = int(input())
 
-def read_int():
-    return int(input())
+a, b = list(map(int, input().split(' ')))
 
-def read_list() -> List[int]:
-    return list(map(int, input().split()))
+M = int(input())
 
-def solve():
+graph = [[] for _ in range(N + 1)]
+for _ in range(M):
+    x, y = list(map(int, input().split(' ')))
+    graph[x].append(y)
+    graph[y].append(x)
 
-    N = read_int()
-    p1, p2 = read_list()
+
+def bfs(start, visited):
+    result = []
+
+    q = deque([(start, 0)])
+    visited[start] = True
+
+    while q:
+        cur, depth = q.popleft()
+
+        if cur == a:
+            result.append(depth)
+        if cur == b:
+            result.append(depth)
+
+        for nxt in graph[cur]:
+            if not visited[nxt]:
+                visited[nxt] = True
+                q.append((nxt, depth + 1))
     
-    M = read_int()
+    return result
 
-    graph = [[] for _ in range(N+1)]
+answer = -1
+visited = [False] * (N + 1)
+for i in range(1, N + 1):
+    if not visited[i]:
+        result = bfs(i, visited)
+        if len(result) == 2:
+            answer = result[0] + result[1]
 
-    for _ in range(M):
-        a, b = read_list()
-        graph[a].append(b)
-        graph[b].append(a)
-    
-    visited = [False for _ in range(N+1)]
-
-
-    stack = [[p1,0]]
-    visited[p1] = True
-
-    answer = -1
-    while stack:
-        [cur, depth] = stack.pop()
-        if cur == p2:
-            answer = depth
-            break
-
-        for next in reversed(graph[cur]):
-            if not visited[next]:                    
-                stack.append([next, depth+1])
-                visited[next] = True
-    
-
-    print(answer)
-
-solve()
+print(answer)
