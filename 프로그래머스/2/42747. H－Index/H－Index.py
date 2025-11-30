@@ -1,9 +1,12 @@
 def solution(citations):
-    lc = len(citations)
-    citations.sort()
     answer = 0
-    for i in range(lc):
-        if citations[i] >= lc-i:
-            answer=lc-i
-            break
-    return answer
+
+    citations.sort()
+    n = len(citations)
+    
+    h = 0
+    for i in range(len(citations)):
+        if citations[i] >= n - i:
+            return n - i
+            
+    return h
